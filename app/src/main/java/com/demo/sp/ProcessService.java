@@ -29,6 +29,17 @@ public class ProcessService extends Service implements SharedPreferences.OnShare
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        int value = super.onStartCommand(intent, flags, startId);
+        Log.i("ccc", "onStartCommand intent : " + intent.toString());
+        if (null != intent && null != intent.getStringExtra("key") && intent.getStringExtra("key").equalsIgnoreCase("add")) {
+            SharedPreferences sp = CSharedPreferences.getSharedPreferences(this, "demo_sp", Context.MODE_MULTI_PROCESS);
+            sp.edit().putInt("value", sp.getInt("value", -1) + 1).apply();
+        }
+        return value;
+    }
+
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.i("ccc", "server onSharedPreferenceChanged sp : " +
                 sharedPreferences.getInt("value", -1) + "    key : " + sharedPreferences.getInt(key, -1));
